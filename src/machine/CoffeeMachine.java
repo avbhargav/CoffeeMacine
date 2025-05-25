@@ -18,14 +18,15 @@ public class CoffeeMachine {
     public static final int COST_OF_CAPPUCCINO = 6;
 
     public static final int DISPOSABLE_CUPS = 1;
+    public boolean isAlive = true;
 
     public static final Scanner scan = new Scanner(System.in);
 
-    public int availWater = 0;
-    public int availMilk = 0;
-    public int availCoffeeBeans = 0;
-    public int moneyEarned = 0;
-    public int availDisposableCups = 0;
+    public int availWater = 400;
+    public int availMilk = 540;
+    public int availCoffeeBeans = 120;
+    public int moneyEarned = 550;
+    public int availDisposableCups = 9;
 
     public CoffeeMachine(int availMilk, int availWater, int availCoffeeBeans, int availDisposableCups) {
         this.availMilk = availWater;
@@ -36,37 +37,43 @@ public class CoffeeMachine {
 
     public static void main(String[] args) {
         CoffeeMachine coffeeMachine = new CoffeeMachine(4000, 1000, 500, 30);
-
-        coffeeMachine.displayResources();
-        coffeeMachine.askForAction();
-        System.out.println("");
-        coffeeMachine.displayResources();
+        do {
+            coffeeMachine.askForAction();
+        } while(coffeeMachine.isAlive);
 
     }
 
     public void askForAction(){
-        String command = "";
-        System.out.println("Write action (buy, fill, take):");
-        command = scan.next().toLowerCase();
-        actionController(command);
+        System.out.println("Write action (buy, fill, take, remaining, exit):");
+        actionController(scan.next().toLowerCase());
     }
 
     public void actionController(String action){
         switch (action){
             case "buy":
-                int coffeeType = displayCoffeeOptionsAndCollectOrder();
-                String msg = collectMoneyAndServeCoffee(coffeeType);
-//                System.out.println(msg);
+                int coffeeType = this.displayCoffeeOptionsAndCollectOrder();
+                String msg = this.collectMoneyAndServeCoffee(coffeeType);
+                System.out.println(msg);
                 break;
             case "fill":
-                collectAndFillIngredients();
+                this.collectAndFillIngredients();
                 break;
             case "take":
-                giveOutMoney();
+                this.giveOutMoney();
+                break;
+            case "remaining":
+                this.displayResources();
+                break;
+            case "exit":
+                this.stopCoffeeMachine();
                 break;
             default:
                 System.out.println("Invalid Service Entered");
         }
+    }
+
+    private void stopCoffeeMachine() {
+        this.isAlive = false;
     }
 
     private void giveOutMoney() {
@@ -112,7 +119,7 @@ public class CoffeeMachine {
     }
 
 
-    private static int displayCoffeeOptionsAndCollectOrder() {
+    private int displayCoffeeOptionsAndCollectOrder() {
         System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ");
         return scan.nextInt();
     }
@@ -134,7 +141,6 @@ public class CoffeeMachine {
         System.out.println(this.availMilk+" ml of milk");
         System.out.println(this.availCoffeeBeans+" g of coffee beans");
         System.out.println(this.availDisposableCups+" disposable cups");
-        System.out.println(this.moneyEarned + "$ of money \n");
+        System.out.println(this.moneyEarned + "$ of money");
     }
-
 }
