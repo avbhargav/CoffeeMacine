@@ -32,14 +32,16 @@ public class CoffeeMachine {
                     this.collectMoneyAndServeCoffee(this.userCoffeeChoice);
                 } else {
                     System.out.println("I need cleaning!");
-                    noOfCupsMadeSoFar = 0;
                     askForAction();
                 }
 
             }
             case "fill" -> resourceManager.collectAndFillResources();
             case "take" -> moneyManager.giveOutMoney();
-            case "clean" -> System.out.println("I have been cleaned!");
+            case "clean" -> {
+                System.out.println("I have been cleaned!");
+                noOfCupsMadeSoFar = 0;
+            }
             case "remaining" -> {
                 resourceManager.displayResources();
                 moneyManager.displayMoneyEarned();
