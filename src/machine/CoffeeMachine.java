@@ -9,7 +9,7 @@ public class CoffeeMachine {
     public static final Scanner scan = new Scanner(System.in);
     private final MoneyManager moneyManager = new MoneyManager();
     private final ResourceManager resourceManager = new ResourceManager(400, 540, 120, 9);
-
+    private int noOfCupsMadeSoFar = 0;
 
     public static void main(String[] args) {
         CoffeeMachine coffeeMachine = new CoffeeMachine();
@@ -20,18 +20,26 @@ public class CoffeeMachine {
     }
 
     public void askForAction() {
-        System.out.println("Write action (buy, fill, take, remaining, exit):");
+        System.out.println("Write action (buy, fill, take, clean, remaining, exit):");
         actionController(scan.next().toLowerCase());
     }
 
     public void actionController(String action) {
         switch (action) {
             case "buy" -> {
-                this.takeOrder();
-                this.collectMoneyAndServeCoffee(this.userCoffeeChoice);
+                if(!(noOfCupsMadeSoFar == 10)){
+                    this.takeOrder();
+                    this.collectMoneyAndServeCoffee(this.userCoffeeChoice);
+                } else {
+                    System.out.println("I need cleaning!");
+                    noOfCupsMadeSoFar = 0;
+                    askForAction();
+                }
+
             }
             case "fill" -> resourceManager.collectAndFillResources();
             case "take" -> moneyManager.giveOutMoney();
+            case "clean" -> System.out.println("I have been cleaned!");
             case "remaining" -> {
                 resourceManager.displayResources();
                 moneyManager.displayMoneyEarned();
@@ -92,6 +100,7 @@ public class CoffeeMachine {
     }
 
     public void makeCoffee(Coffee coffee) {
+        noOfCupsMadeSoFar += 1;
         resourceManager.setAvailWater(resourceManager.getAvailWater() - coffee.getWATER_NEEDED());
         resourceManager.setAvailMilk(resourceManager.getAvailMilk() - coffee.getMILK_NEEDED());
         resourceManager.setAvailCoffeeBeans(resourceManager.getAvailCoffeeBeans() - coffee.getCOFFEE_BEANS_NEEDED());
